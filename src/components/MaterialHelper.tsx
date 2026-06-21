@@ -31,33 +31,18 @@ interface ApiResponse {
   isConfigError?: boolean;
 }
 
-const VALID_MATERIALS = [
-  "cement",
-  "tmt",
-  "tmt bar",
-  "steel",
-  "sand",
-  "morang",
-  "bricks",
-  "brick",
-  "tiles",
-  "tile",
-  "pvc pipe",
-  "pipe"
+const POPULAR_MATERIALS = [
+  "Cement",
+  "TMT Bar",
+  "Steel",
+  "Sand",
+  "Morang Sand",
+  "Bricks",
+  "Tiles",
+  "PVC Pipe",
+  "Aggregate",
+  "Concrete"
 ];
-
-const isValidMaterial = VALID_MATERIALS.some(
-  item => searchKey.includes(item)
-);
-
-if (!isValidMaterial) {
-  return Response.json(
-    {
-      error: "Please enter a valid construction material."
-    },
-    { status: 400 }
-  );
-}
 
 // Fun changing load messages to keep Kanpur homeowners engaged
 const LOADING_STEPS = [
@@ -122,6 +107,12 @@ export default function MaterialHelper() {
       const data: ApiResponse = await response.json();
 
       if (!response.ok) {
+        if (response.status === 400) {
+          setInputError(data.error || "Please enter a valid construction material.");
+          setResult(null);
+          setLoading(false);
+          return;
+        }
         throw new Error(data.error || "Failed to retrieve information from the server.");
       }
 
@@ -185,7 +176,7 @@ export default function MaterialHelper() {
                 <input
                   id="material-input"
                   type="text"
-                  placeholder="e.g. Portland Pozzolan Cement, 8mm TMT Bar, Morang Sand..."
+                  placeholder="Cement, TMT Bar, Tiles, Bricks..."
                   value={material}
                   onChange={(e) => {
                     setMaterial(e.target.value);
