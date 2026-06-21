@@ -31,14 +31,33 @@ interface ApiResponse {
   isConfigError?: boolean;
 }
 
-const POPULAR_MATERIALS = [
-  "Cement",
-  "TMT Bar (Steel)",
-  "Morang Sand (Coarse)",
-  "Red Clay Bricks",
-  "Vitrified Tiles",
-  "Plumbing PVC Pipes"
+const VALID_MATERIALS = [
+  "cement",
+  "tmt",
+  "tmt bar",
+  "steel",
+  "sand",
+  "morang",
+  "bricks",
+  "brick",
+  "tiles",
+  "tile",
+  "pvc pipe",
+  "pipe"
 ];
+
+const isValidMaterial = VALID_MATERIALS.some(
+  item => searchKey.includes(item)
+);
+
+if (!isValidMaterial) {
+  return Response.json(
+    {
+      error: "Please enter a valid construction material."
+    },
+    { status: 400 }
+  );
+}
 
 // Fun changing load messages to keep Kanpur homeowners engaged
 const LOADING_STEPS = [
